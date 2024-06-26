@@ -31,9 +31,9 @@ def pie_chart(fa):
     st.plotly_chart(pie)
     return None
 
-def bar_chart(ja_dict,J):
+def bar_chart(ja_dict,j_trans):
     #st.write(f"##### Skills Aprendidas")
-    ja_df = pd.DataFrame({'ja':ja_dict.values(),'Trabajos':[J[j_id].name for j_id in ja_dict.keys()]})
+    ja_df = pd.DataFrame({'ja':ja_dict.values(),'Trabajos':[j_trans[j_id] for j_id in ja_dict.keys()]})
     print(ja_df)
     bar = px.bar(ja_df, x='ja', y='Trabajos', orientation='h')
     bar.update_xaxes(title_text = "Porcentage de skills aprendidas en (%)",
@@ -61,18 +61,24 @@ try:
     U = st.session_state['U']
     S = st.session_state['S']
     J = st.session_state['J']
-    j_dict = st.session_state['j_dict']
+    #j_dict = st.session_state['j_dict']
+    j_trans = st.session_state['j_trans']
+    s_trans = st.session_state['s_trans']
+    u_trans = st.session_state['u_trans']
     
 except:
     course,U,S,J = data_dict(files)
-    j_dict = {j.id:j.name for j_id,j in J.items()}
+    #j_dict = {j.id:j.name for j_id,j in J.items()}
+    j_trans,s_trans,u_trans = read_translations()
     st.session_state['course'] = course   
     st.session_state['U'] = U
     st.session_state['S'] = S
     st.session_state['J'] = J
-    st.session_state['j_dict'] = j_dict
+    #st.session_state['j_dict'] = j_dict
+    st.session_state['s_trans'] = s_trans
+    st.session_state['u_trans'] = u_trans
 
-st.write("# Planea Tus Cursos :books:")
+st.write("# Planea Tu Grado :books:")
 st.write("## Grado en Tecnologías de la Información y la Comunicación")
 
 st.write(
@@ -92,8 +98,8 @@ solver_ = 'GLPK_MI'
 
 
 job_id = st.multiselect("Trabajo(s) deseado",
-               j_dict.keys(), default=None, 
-               format_func=lambda x : j_dict[x],
+               j_trans.keys(), default=None, 
+               format_func=lambda x : j_trans[x],
                key=None, help=None, on_change=None, args=None, kwargs=None, 
                max_selections=5, placeholder="Escoje una opción", disabled=False, label_visibility="visible"
 )
@@ -106,7 +112,7 @@ if len(job_id) > 0:
         problem,x,v,y,z = problem_cvxpy(matrices)
         obj_value,xx,vv,yy,zz,solve_time = solve_problem(problem,x,y,v,z,solver_,solvertime=30,max_iter=1000,verbose=False)
 
-    df = plot_schedule(xx,x_keys,L)
+    df = plot_schedule(xx,x_keys,L,u_trans)
     styler = df.style.hide_index()
     
     st.write(styler.to_html(escape=False, index=False), unsafe_allow_html=True)
@@ -114,7 +120,9 @@ if len(job_id) > 0:
     ja = job_affinity(t,zz)
     st.write(f"##### Skills Aprendidas:")
 
-    df_s = skills_list([J[j_id] for j_id in job_id],xx,x_keys)
+    dicts = j_trans,s_trans,u_trans
+
+    df_s = skills_list([J[j_id] for j_id in job_id],xx,x_keys,dicts)
     
     pie_chart(ja)
 
@@ -123,4 +131,4 @@ if len(job_id) > 0:
     
     if len(job_id) > 1:
         ja_dict = job_affinity_single(t,zz,J,S,job_id)
-        bar_chart(ja_dict,J)
+        bar_chart(ja_dict,j_trans)

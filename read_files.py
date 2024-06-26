@@ -10,6 +10,21 @@ import os
 import numpy as np
 from definitions import *
 
+def read_translations():
+
+    path = os.getcwd()
+    jobs = os.path.join(path,'data','job_dict.json')
+    skills = os.path.join(path,'data','skills_dict.json')
+    units = os.path.join(path,'data','units_dict.json')
+
+    with open(jobs,'r') as inputfile:
+        j_trans = json.loads(inputfile.read())
+    with open(units,'r') as inputfile:
+        u_trans = json.loads(inputfile.read())
+    with open(skills,'r') as inputfile:
+        s_trans = json.loads(inputfile.read())
+    return j_trans,s_trans,u_trans
+
 
 def read_json(filepath):
     """
