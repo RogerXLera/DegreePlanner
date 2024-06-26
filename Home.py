@@ -72,7 +72,7 @@ except:
     st.session_state['J'] = J
     st.session_state['j_dict'] = j_dict
 
-st.write("# Planeador de Cursos :books:")
+st.write("# Planea Tus Cursos :books:")
 st.write("## Grado en Tecnologías de la Información y la Comunicación")
 
 st.write(
