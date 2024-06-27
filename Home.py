@@ -74,7 +74,7 @@ except:
     st.session_state['U'] = U
     st.session_state['S'] = S
     st.session_state['J'] = J
-    #st.session_state['j_dict'] = j_dict
+    st.session_state['j_trans'] = j_trans
     st.session_state['s_trans'] = s_trans
     st.session_state['u_trans'] = u_trans
 
@@ -118,6 +118,10 @@ if len(job_id) > 0:
     st.write(styler.to_html(escape=False, index=False), unsafe_allow_html=True)
 
     ja = job_affinity(t,zz)
+    
+    """
+
+    """
     st.write(f"##### Skills Aprendidas:")
 
     dicts = j_trans,s_trans,u_trans
