@@ -118,6 +118,9 @@ if len(job_id) > 0:
     st.write(styler.to_html(escape=False, index=False), unsafe_allow_html=True)
 
     ja = job_affinity(t,zz)
+    """
+    (*) Asignaturas optativas
+    """
     
     """
 

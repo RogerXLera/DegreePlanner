@@ -61,7 +61,10 @@ def plot_schedule(xx,x_keys,L,u_dict):
                 u_a = x_keys[i][0]
                 l_a = x_keys[i][1]
                 if l_ob.id == l_a.id:
-                    sem_ += [u_dict[u_a.id]]
+                    if u_a.core:
+                        sem_ += [f"{u_dict[u_a.id]}"]
+                    else:
+                        sem_ += [f"{u_dict[u_a.id]}*"]
         dict_.update({l_ob:sem_})
 
     s1 = []
@@ -132,7 +135,10 @@ def skills_list(J,xx,x_keys,dicts):
                         if s_u.id == s.id:
                             if s_u.level > max_level:
                                 max_level = s_u.level
-                                unit_name = u_trans[u_a.id]
+                                if u_a.core:
+                                    unit_name = f"{u_trans[u_a.id]}"
+                                else:
+                                    unit_name = f"{u_trans[u_a.id]}*"
             
             al += [max_level]
             units += [unit_name]
